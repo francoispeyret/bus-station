@@ -5,7 +5,7 @@ export class Bus {
             x: 0,
             y: 200,
             z: 120
-        }
+        };
         this.w = 150;
         this.l = 330;
         this.offsetAngle = 0;

@@ -8,7 +8,7 @@ export class RoadTree {
             x: _.floor(_.random(-400,400)),
             y: 0,
             z: -150 * this.z
-        }
+        };
         this.side = _.random(0,10);
         if(this.side > 5) {
             this.p.x += 1000;
