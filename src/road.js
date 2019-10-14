@@ -4,7 +4,7 @@ import {RoadTree} from './roadTree.js';
 export class Road {
     constructor(_) {
         this.tirets = [];
-        this.tiretZLength = _.floor(_.height*5/330) + 1;
+        this.tiretZLength = _.floor(_.height*5/320) + 1;
 
         for(let z = 0; z < this.tiretZLength; z++) {
             this.tirets[z] = new RoadTiret(_,z);

@@ -18,6 +18,7 @@ let s = (sk) => {
     };
 
     sk.draw = () => {
+        sk.blendMode(sk.MULTIPLY);
         sk.noStroke();
         sk.background('#71C3FF');
 

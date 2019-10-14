@@ -21,7 +21,7 @@ export class Bus {
             _.box(this.w, this.l, 130);
             _.push();
                 _.translate(0,0,-117);
-                _.fill(0,200);
+                _.fill(230,30);
                 _.plane(this.w*1.1,this.l);
             _.pop();
 
@@ -119,7 +119,7 @@ export class Bus {
 
     turnRight() {
         if(this.p.x < 350) {
-            this.p.x += 5;
+            this.p.x += this.offsetAngle;
             if(this.offsetAngle < 15)
                 this.offsetAngle = this.offsetAngle + 1;
         }
@@ -127,7 +127,7 @@ export class Bus {
 
     turnLeft() {
         if(this.p.x > -350) {
-            this.p.x -= 5;
+            this.p.x += this.offsetAngle;
             if(this.offsetAngle > -15)
                 this.offsetAngle = this.offsetAngle - 1;
         }

@@ -5,16 +5,17 @@ export class Object {
             y: 70,
             z: 100
         };
-        this.c = '#f00';
+        this.c = '#f91e1e';
         this.w = 120;
         this.vel = 30;
         this.animationColisionState = false;
-        this.animationLife = 0;
+        this.animationLife = 60;
     }
 
     reset(_) {
         this.p.z = -3500;
         const randPosX = _.floor(_.random(0,3));
+        //const randPosX = 1;
         if(randPosX === 0) {
             this.p.x = -300;
         } else if(randPosX === 1) {
@@ -29,10 +30,10 @@ export class Object {
         if(this.p.z > 1000) {
             this.reset(_);
         }
-        this.p.z += this.vel;
         if(this.animationColisionState === true) {
-            this.animationLife+=1;
             this.animationColision(_);
+        } else {
+            this.p.z += this.vel;
         }
     }
 
@@ -48,16 +49,25 @@ export class Object {
     }
 
     animationColision(_) {
-        if(this.animationLife < 50) {
-            this.p.y = (_.sin(this.animationLife*3)+1) * 150 ;
+        if(this.animationLife > 0) {
+            this.p.y += this.animationLife / 3;
+            console.log(this.p.y);
+            this.animationLife -= 1;
         } else {
+            this.reset(_);
             this.p.y = 70;
-            this.animationLife = 0;
+            this.animationLife = 60;
             this.animationColisionState = false;
         }
     }
 
     show(_) {
+        _.push();
+            _.translate(this.p.x,this.p.z,2);
+            const opacity = _.map(this.p.y,70,300,220,255);
+            _.fill(opacity,30);
+            _.plane(this.w*1.1,this.l);
+        _.pop();
         _.push();
             _.translate(this.p.x,this.p.z,this.p.y);
             _.fill(this.c);

@@ -7,7 +7,7 @@ export class RoadTiret {
         this.p = {
             x: 0,
             y: 2,
-            z: -_.height*2.5 + 330 * this.z
+            z: -_.height*2.5 + 320 * this.z
         }
     }
 
