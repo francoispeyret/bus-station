@@ -51,7 +51,6 @@ export class Object {
     animationColision(_) {
         if(this.animationLife > 0) {
             this.p.y += this.animationLife / 3;
-            console.log(this.p.y);
             this.animationLife -= 1;
         } else {
             this.reset(_);
@@ -64,6 +63,7 @@ export class Object {
     show(_) {
         _.push();
             _.translate(this.p.x,this.p.z,2);
+            _.blendMode(_.MULTIPLY);
             const opacity = _.map(this.p.y,70,300,220,255);
             _.fill(opacity,30);
             _.plane(this.w*1.1,this.l);

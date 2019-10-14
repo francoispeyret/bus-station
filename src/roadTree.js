@@ -15,14 +15,20 @@ export class RoadTree {
         } else {
             this.p.x -= 1000;
         }
+        this.vel = 10;
     }
 
     update(_) {
         if(this.p.z > _.height*2.5) {
             this.p.z = -_.height*2.5;
         } else {
-            this.p.z = this.p.z + 10;
+            this.p.z += this.vel;
         }
+        this.setAcceleration();
+    }
+
+    setAcceleration() {
+        this.vel += 0.00015;
     }
 
     show(_) {

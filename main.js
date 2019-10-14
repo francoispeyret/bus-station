@@ -6,8 +6,13 @@ import {Object} from './src/object.js';
 let bus;
 let road;
 let object;
+let font;
 
 let s = (sk) => {
+    sk.preload = () => {
+      font = sk.loadFont('AsapCondensed-Bold.ttf');
+    }
+
     sk.setup = () => {
         sk.createCanvas(window.innerWidth, window.innerHeight, sk.WEBGL);
 
@@ -18,7 +23,7 @@ let s = (sk) => {
     };
 
     sk.draw = () => {
-        sk.blendMode(sk.MULTIPLY);
+        sk.textFont(font);
         sk.noStroke();
         sk.background('#71C3FF');
 
