@@ -11,14 +11,17 @@ let font;
 let s = (sk) => {
     sk.preload = () => {
       font = sk.loadFont('AsapCondensed-Bold.ttf');
-    }
+    };
+
+    sk.windowResized = () => {
+      sk.resizeCanvas(window.innerWidth, window.innerHeight);
+    };
 
     sk.setup = () => {
         sk.createCanvas(window.innerWidth, window.innerHeight, sk.WEBGL);
 
         bus = new Bus(sk);
         road = new Road(sk);
-
         object = new Object();
     };
 
