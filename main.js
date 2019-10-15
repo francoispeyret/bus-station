@@ -10,11 +10,11 @@ let font;
 
 let s = (sk) => {
     sk.preload = () => {
-      font = sk.loadFont('AsapCondensed-Bold.ttf');
+        font = sk.loadFont('AsapCondensed-Bold.ttf');
     };
 
     sk.windowResized = () => {
-      sk.resizeCanvas(window.innerWidth, window.innerHeight);
+        sk.resizeCanvas(window.innerWidth, window.innerHeight);
     };
 
     sk.setup = () => {
@@ -35,20 +35,6 @@ let s = (sk) => {
 
         sk.fill('#B0E14E');
         sk.plane(sk.width * 5, sk.height * 5);
-
-        sk.push();
-            sk.fill('#3F3F3F');
-            sk.translate(0, 0, 1);
-            sk.plane(900, sk.height * 5);
-        sk.pop();
-
-        sk.push();
-            sk.fill('#FFE46B');
-            sk.translate(440, 0, 2);
-            sk.plane(5, sk.height * 5);
-            sk.translate(-880, 0, 0);
-            sk.plane(5, sk.height * 5);
-        sk.pop();
 
         road.update(sk);
         road.show(sk);

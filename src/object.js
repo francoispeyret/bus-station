@@ -15,7 +15,6 @@ export class Object {
     reset(_) {
         this.p.z = -3500;
         const randPosX = _.floor(_.random(0,3));
-        //const randPosX = 1;
         if(randPosX === 0) {
             this.p.x = -300;
         } else if(randPosX === 1) {
@@ -32,6 +31,8 @@ export class Object {
         }
         if(this.animationColisionState === true) {
             this.animationColision(_);
+            if(bus.oil.current < bus.oil.max)
+                bus.oil.current += .05;
         } else {
             this.p.z += this.vel;
         }

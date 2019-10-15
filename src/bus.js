@@ -12,34 +12,48 @@ export class Bus {
         this.color = '#E1E1E1';
         this.distance = 0;
         this.vel = 0.5;
+        this.oil = {
+            current: 99,
+            max: 100
+        };
+        this.usageOil = 0.005;
     }
 
     show(_) {
         _.push();
             _.translate(this.p.x,this.p.y,this.p.z);
+
+            // angle of bus
             _.rotateZ(this.offsetAngle);
+
             _.push();
                 _.translate(0,0,-117);
                 _.blendMode(_.MULTIPLY);
                 _.fill(230,30);
                 _.plane(this.w*1.1,this.l);
             _.pop();
-            _.rotateY(_.sin(_.frameCount*20)/3);
+
+            // animation wiggle
+            _.rotateY(_.sin(_.frameCount*20)/2);
+
+            // Interface on bus
             _.push();
                 _.fill(_.color(this.color));
-                _.translate(0,130,61);
-                _.plane(this.w,45);
+                _.translate(0,110,61);
+                _.plane(this.w,80);
                 _.blendMode(_.BLEND);
                 _.textSize(32);
                 _.textAlign(_.RIGHT);
-                _.translate(this.w / 2 - 13,20,5);
+                _.translate(this.w / 2 - 13,40,5);
                 _.fill(0);
                 _.text(this.getDistance(_), 0, 0);
+                _.translate(0, -30, 0);
+                _.text(this.getOil(_), 0, 0);
             _.pop();
             _.fill(_.color(this.color));
             _.box(this.w, this.l, 130);
 
-            // roues
+            // wheels
             _.push();
                 _.translate(-this.w/2,-this.l/3,-70);
                 _.rotateZ(90);
@@ -129,6 +143,7 @@ export class Bus {
                 this.offsetAngle += 1;
             }
         }
+        this.setCarConsumption();
         this.distance += this.vel;
         this.setAcceleration();
         if(
@@ -171,6 +186,21 @@ export class Bus {
             unit = 'm'
         }
         return value + unit;
+    }
+
+    getOil(_) {
+        let oilValue = this.oil.current;
+        if(oilValue >= this.oil.max) {
+            oilValue = _.floor(oilValue);
+        } else {
+            oilValue = oilValue.toFixed(1);
+        }
+
+        return oilValue + '/' + this.oil.max;
+    }
+
+    setCarConsumption() {
+        this.oil.current -= this.usageOil;
     }
 
 
