@@ -14,11 +14,16 @@ export class Bus {
         this.vel = 0.5;
         this.jumping = false;
         this.jumpingAnimation = 0;
+        this.jumpingAngle = 0;
         this.oil = {
-            current: 99,
+            value: 99,
             max: 100
         };
         this.usageOil = 0.005;
+        this.crash = false;
+        this.crashType = null;
+        this.crashingAnimation = 0;
+        this.crashingAngle = 0;
     }
 
     show(_) {
@@ -37,8 +42,14 @@ export class Bus {
             _.pop();
             _.translate(0,0,this.p.z);
 
-            // animation wiggle
-            _.rotateY(_.sin(_.frameCount*20)/2);
+            if(this.crash === true) {
+                _.rotateY(this.crashingAngle);
+            } else {
+                _.rotateX(this.jumpingAngle);
+
+                // animation wiggle
+                _.rotateY(_.sin(_.frameCount*20)/2);
+            }
 
             // Interface on bus
             _.push();
@@ -138,9 +149,11 @@ export class Bus {
     }
 
     update(_) {
-        if(_.keyIsDown(_.UP_ARROW) || _.keyIsDown(32)) {
-            this.setJump();
-        } else if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false && this.p.x > -350) {
+        if(this.crash === true) {
+            this.crashAnimation(_);
+            return;
+        }
+        if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false && this.p.x > -350) {
             this.turnLeft();
         } else if(_.keyIsDown(_.RIGHT_ARROW) && _.keyIsDown(_.LEFT_ARROW)==false && this.p.x < 350) {
             this.turnRight();
@@ -165,6 +178,12 @@ export class Bus {
         }
     }
 
+    keyReleased(code) {
+        if(code === 38 || code === 32) {
+            this.setJump(true);
+        }
+    }
+
     turnRight() {
         if(this.offsetAngle < 15) {
             this.offsetAngle += 1;
@@ -177,16 +196,37 @@ export class Bus {
         }
     }
 
-    setJump() {
-        this.jumping = true;
+    setJump(user) {
+        if(this.jumping === true && user === true)  {
+            this.setCrash('jumpingOverkill');
+        } else if(this.jumping === false){
+            this.jumping = true;
+        }
     }
 
     jumpAnimation(_) {
         this.p.z = _.sin(this.jumpingAnimation)*150 + 120;
-        this.jumpingAnimation += 3;
+        this.jumpingAngle = _.sin(this.jumpingAnimation)*-15;
+        this.jumpingAnimation += 5;
         if(this.jumpingAnimation > 180) {
             this.jumpingAnimation = 0;
             this.jumping = false;
+        }
+    }
+
+    setCrash(crashType) {
+        this.crashType = crashType;
+        this.crash = true;
+    }
+
+    crashAnimation(_) {
+        if(this.crashingAnimation < 180) {
+            this.p.y = _.sin(this.crashingAnimation+90)*90 + 200;
+            if(this.crashingAnimation < 90) {
+                this.crashingAngle = _.sin(this.crashingAnimation-180)*90;
+            }
+            //this.jumpingAngle = _.sin(this.jumpingAnimation)*-15;
+            this.crashingAnimation += 5;
         }
     }
 
@@ -213,7 +253,7 @@ export class Bus {
     }
 
     getOil(_) {
-        let oilValue = this.oil.current;
+        let oilValue = this.oil.value;
         if(oilValue >= this.oil.max) {
             oilValue = _.floor(oilValue);
         } else {
@@ -224,7 +264,7 @@ export class Bus {
     }
 
     setCarConsumption() {
-        this.oil.current -= this.usageOil;
+        this.oil.value -= this.usageOil;
     }
 
 

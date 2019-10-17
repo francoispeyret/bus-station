@@ -39,18 +39,23 @@ let s = (sk) => {
         sk.fill('#B0E14E');
         sk.plane(sk.width * 5, sk.height * 5);
 
+        if(bus.crash === false) {
         road.update(sk);
-        road.show(sk);
-
         object.update(sk,bus);
-        object.show(sk);
-
         jump.update(sk,bus);
-        jump.show(sk);
-
+        }
         bus.update(sk);
+
+        road.show(sk);
+        object.show(sk);
+        jump.show(sk);
         bus.show(sk);
     };
+
+    sk.keyReleased = () => {
+        bus.keyReleased(sk.keyCode);
+    }
+
 };
 
 const P5 = new p5(s);

@@ -1,7 +1,7 @@
 export class Object {
     constructor(_) {
         this.p = {
-            x: 0,
+            x: -300,
             y: 70,
             z: 100
         };

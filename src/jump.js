@@ -3,16 +3,27 @@ import {Object} from './object.js';
 export class Jump extends Object {
     constructor(_) {
         super();
-        this.p.x = -300;
+        this.p.x = 0;
         this.p.y = -10;
         this.w = 270;
         this.c = '#f1d300';
         this.c2 = '#ffea2e';
     }
 
+    reset(_) {
+        this.p.z = -3500;
+        const randPosX = _.floor(_.random(0,3));
+        if(randPosX === 0) {
+            this.p.x = -300;
+        } else if(randPosX === 1) {
+            this.p.x = 0;
+        } else if(randPosX === 2) {
+            this.p.x = 300;
+        }
+    }
 
     colision(_,bus) {
-        if(this.p.z > -this.w && this.p.z < 450) {
+        if(this.p.z > -this.w/2 && this.p.z < 450) {
             if(
                 bus.p.x + bus.w / 2 > this.p.x - this.w / 2 &&
                 bus.p.x - bus.w / 2 < this.p.x + this.w / 2
@@ -20,17 +31,17 @@ export class Jump extends Object {
                 this.animationColisionState = true;
             }
         }
+        if(this.animationColisionState == true) {
+            bus.setJump();
+        }
+        this.animationColisionState = false;
     }
 
     update(_,bus) {
-        this.colision(_,bus);
         if(this.p.z > 1000) {
             this.reset(_);
         }
-        if(this.animationColisionState === true) {
-            bus.setJump();
-            this.animationColisionState = false;
-        }
+        this.colision(_,bus);
         this.p.z += this.vel;
     }
 
