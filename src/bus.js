@@ -12,6 +12,8 @@ export class Bus {
         this.color = '#E1E1E1';
         this.distance = 0;
         this.vel = 0.5;
+        this.jumping = false;
+        this.jumpingAnimation = 0;
         this.oil = {
             current: 99,
             max: 100
@@ -21,17 +23,19 @@ export class Bus {
 
     show(_) {
         _.push();
-            _.translate(this.p.x,this.p.y,this.p.z);
+            _.translate(this.p.x,this.p.y,0);
 
             // angle of bus
             _.rotateZ(this.offsetAngle);
 
             _.push();
-                _.translate(0,0,-117);
+                _.translate(0,0,3);
                 _.blendMode(_.MULTIPLY);
-                _.fill(230,30);
+                const opacity = _.map(this.p.z,120,300,220,255);
+                _.fill(opacity,30);
                 _.plane(this.w*1.1,this.l);
             _.pop();
+            _.translate(0,0,this.p.z);
 
             // animation wiggle
             _.rotateY(_.sin(_.frameCount*20)/2);
@@ -56,6 +60,8 @@ export class Bus {
             // wheels
             _.push();
                 _.translate(-this.w/2,-this.l/3,-70);
+                if(this.jumpingAnimation > 10 && this.jumpingAnimation < 180)
+                    _.translate(0,0,-18)
                 _.rotateZ(90);
                 _.push();
                     _.rotateY(_.frameCount*-3);
@@ -132,11 +138,13 @@ export class Bus {
     }
 
     update(_) {
-        if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false && this.p.x > -350) {
+        if(_.keyIsDown(_.UP_ARROW) || _.keyIsDown(32)) {
+            this.setJump();
+        } else if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false && this.p.x > -350) {
             this.turnLeft();
         } else if(_.keyIsDown(_.RIGHT_ARROW) && _.keyIsDown(_.LEFT_ARROW)==false && this.p.x < 350) {
             this.turnRight();
-        } else if(this.offsetAngle != 0) {
+        } else if(this.offsetAngle > 0 || this.offsetAngle < 0 ) {
             if(this.offsetAngle > 0) {
                 this.offsetAngle -= 1;
             } else {
@@ -152,6 +160,9 @@ export class Bus {
         ) {
             this.p.x += this.offsetAngle;
         }
+        if(this.jumping === true) {
+            this.jumpAnimation(_);
+        }
     }
 
     turnRight() {
@@ -163,6 +174,19 @@ export class Bus {
     turnLeft() {
         if(this.offsetAngle > -15) {
             this.offsetAngle -= 1;
+        }
+    }
+
+    setJump() {
+        this.jumping = true;
+    }
+
+    jumpAnimation(_) {
+        this.p.z = _.sin(this.jumpingAnimation)*150 + 120;
+        this.jumpingAnimation += 3;
+        if(this.jumpingAnimation > 180) {
+            this.jumpingAnimation = 0;
+            this.jumping = false;
         }
     }
 
