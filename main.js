@@ -2,10 +2,12 @@ import * as p5 from './lib/p5.js';
 import {Bus} from './src/bus.js';
 import {Road} from './src/road.js';
 import {Object} from './src/object.js';
+import {Jump} from './src/jump.js';
 
 let bus;
 let road;
 let object;
+let jump;
 let font;
 
 let s = (sk) => {
@@ -23,6 +25,7 @@ let s = (sk) => {
         bus = new Bus(sk);
         road = new Road(sk);
         object = new Object();
+        jump = new Jump();
     };
 
     sk.draw = () => {
@@ -41,6 +44,9 @@ let s = (sk) => {
 
         object.update(sk,bus);
         object.show(sk);
+
+        jump.update(sk,bus);
+        jump.show(sk);
 
         bus.update(sk);
         bus.show(sk);
