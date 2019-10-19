@@ -2,19 +2,19 @@ import {RoadTiret} from './roadTiret.js';
 import {RoadTree} from './roadTree.js';
 
 export class Road {
-    constructor(_) {
+    constructor(_,global) {
         this.tirets = [];
         this.tiretZLength = _.floor(_.height*5/320) + 1;
 
         for(let z = 0; z < this.tiretZLength; z++) {
-            this.tirets[z] = new RoadTiret(_,z);
+            this.tirets[z] = new RoadTiret(_,z,global);
         }
 
         this.trees = [];
         this.treeZLength = 50;
 
         for(let z = 0; z < this.treeZLength; z++) {
-            this.trees[z] = new RoadTree(_,z);
+            this.trees[z] = new RoadTree(_,z,global);
         }
     }
 

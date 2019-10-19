@@ -1,7 +1,7 @@
 
 
 export class RoadTiret {
-    constructor(_,z) {
+    constructor(_,z,global) {
         this.z = z;
         this.animationLife = 0;
         this.p = {
@@ -9,7 +9,8 @@ export class RoadTiret {
             y: 2,
             z: -_.height*2.5 + 320 * this.z
         }
-        this.vel = 10;
+        this.vel = global.vel;
+        this.velA = global.velA;
     }
 
     update(_) {
@@ -22,7 +23,7 @@ export class RoadTiret {
     }
 
     setAcceleration() {
-        this.vel += 0.00015;
+        this.vel += this.velA;
     }
 
     show(_) {

@@ -1,5 +1,6 @@
 export class Object {
-    constructor(_) {
+    constructor(_,global) {
+        this.obj = global.objects;
         this.p = {
             x: -300,
             y: 70,
@@ -7,13 +8,15 @@ export class Object {
         };
         this.c = '#f91e1e';
         this.w = 120;
-        this.vel = 30;
+        this.vel = _.floor(_.random(this.obj.vel.min, this.obj.vel.max));
+        this.velA = global.velA;
         this.animationColisionState = false;
         this.animationLife = 60;
     }
 
     reset(_) {
         this.p.z = -3500;
+        this.vel = _.floor(_.random(this.obj.vel.min, this.obj.vel.max));
         const randPosX = _.floor(_.random(0,3));
         if(randPosX === 0) {
             this.p.x = -300;

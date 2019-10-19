@@ -10,6 +10,19 @@ let object;
 let jump;
 let font;
 
+let sound;
+
+let global = {
+    vel: 18,
+    velA: 0.00015,
+    objects: {
+        vel: {
+            min: 5,
+            max: 25,
+        }
+    }
+}
+
 let s = (sk) => {
     sk.preload = () => {
         font = sk.loadFont('AsapCondensed-Bold.ttf');
@@ -23,9 +36,9 @@ let s = (sk) => {
         sk.createCanvas(window.innerWidth, window.innerHeight, sk.WEBGL);
 
         bus = new Bus(sk);
-        road = new Road(sk);
-        object = new Object();
-        jump = new Jump();
+        road = new Road(sk,global);
+        object = new Object(sk,global);
+        jump = new Jump(sk,global);
     };
 
     sk.draw = () => {
@@ -34,15 +47,16 @@ let s = (sk) => {
         sk.background('#71C3FF');
 
         sk.angleMode(sk.DEGREES)
-        sk.rotateX(50)
+        sk.rotateX(50);
+
 
         sk.fill('#B0E14E');
         sk.plane(sk.width * 5, sk.height * 5);
 
         if(bus.crash === false) {
-        road.update(sk);
-        object.update(sk,bus);
-        jump.update(sk,bus);
+            road.update(sk);
+            object.update(sk,bus);
+            jump.update(sk,bus);
         }
         bus.update(sk);
 

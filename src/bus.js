@@ -20,6 +20,7 @@ export class Bus {
             max: 100
         };
         this.usageOil = 0.005;
+    //    this.usageOil = 1;
         this.crash = false;
         this.crashType = null;
         this.crashingAnimation = 0;
@@ -34,6 +35,9 @@ export class Bus {
             _.rotateZ(this.offsetAngle);
 
             _.push();
+                if(this.crash === true) {
+                    _.rotateZ(this.crashingAngle/2);
+                }
                 _.translate(0,0,3);
                 _.blendMode(_.MULTIPLY);
                 const opacity = _.map(this.p.z,120,300,220,255);
@@ -44,6 +48,7 @@ export class Bus {
 
             if(this.crash === true) {
                 _.rotateY(this.crashingAngle);
+                _.rotateX(this.crashingAngle/2);
             } else {
                 _.rotateX(this.jumpingAngle);
 
@@ -62,9 +67,22 @@ export class Bus {
                 _.translate(this.w / 2 - 13,40,5);
                 _.fill(0);
                 _.text(this.getDistance(_), 0, 0);
-                _.translate(0, -30, 0);
-                _.text(this.getOil(_), 0, 0);
+
+                _.translate(-this.w / 3 - 13, -40, 0);
+                _.stroke(50);
+                _.strokeWeight(2);
+                _.plane(this.w+2,22);
+                _.noStroke();
+                _.fill(_.color(this.color));
+                _.translate(0, 0, 1.25);
+                _.plane(this.w,20);
+                _.fill(30);
+                const oilPercent = _.map(this.oil.value, 0, 100, 0, this.w)
+                _.translate(0, 0, 1.25);
+                _.plane(oilPercent,23);
+                //_.text(this.getOil(_), 0, 0);
             _.pop();
+
             _.fill(_.color(this.color));
             _.box(this.w, this.l, 130);
 
@@ -75,7 +93,9 @@ export class Bus {
                     _.translate(0,0,-18)
                 _.rotateZ(90);
                 _.push();
-                    _.rotateY(_.frameCount*-3);
+                    if(this.crash === false) {
+                        _.rotateY(_.frameCount*-3);
+                    }
                     _.fill(40);
                     _.cylinder(40, 15, 12);
                     _.fill(150);
@@ -83,7 +103,9 @@ export class Bus {
                 _.pop();
                 _.translate(0,-this.w,0);
                 _.push();
-                    _.rotateY(_.frameCount*-3);
+                    if(this.crash === false) {
+                        _.rotateY(_.frameCount*-3);
+                    }
                     _.fill(40);
                     _.cylinder(40, 15, 12);
                     _.fill(150);
@@ -91,7 +113,9 @@ export class Bus {
                 _.pop();
                 _.translate(this.l/1.5,0,0);
                 _.push();
-                    _.rotateY(_.frameCount*-3);
+                    if(this.crash === false) {
+                        _.rotateY(_.frameCount*-3);
+                    }
                     _.fill(40);
                     _.cylinder(40, 15, 12);
                     _.fill(150);
@@ -99,7 +123,9 @@ export class Bus {
                 _.pop();
                 _.translate(0,this.w,0);
                 _.push();
-                    _.rotateY(_.frameCount*-3);
+                    if(this.crash === false) {
+                        _.rotateY(_.frameCount*-3);
+                    }
                     _.fill(40);
                     _.cylinder(40, 15, 12);
                     _.fill(150);
@@ -222,6 +248,9 @@ export class Bus {
     crashAnimation(_) {
         if(this.crashingAnimation < 180) {
             this.p.y = _.sin(this.crashingAnimation+90)*90 + 200;
+            if(this.p.z > 120) {
+                this.p.z -= 30;
+            }
             if(this.crashingAnimation < 90) {
                 this.crashingAngle = _.sin(this.crashingAnimation-180)*90;
             }
@@ -264,7 +293,9 @@ export class Bus {
     }
 
     setCarConsumption() {
-        this.oil.value -= this.usageOil;
+        if(this.oil.value >= 0) {
+            this.oil.value -= this.usageOil;
+        }
     }
 
 

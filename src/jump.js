@@ -1,13 +1,14 @@
 
 import {Object} from './object.js';
 export class Jump extends Object {
-    constructor(_) {
-        super();
+    constructor(_,global) {
+        super(_,global);
         this.p.x = 0;
         this.p.y = -10;
         this.w = 270;
         this.c = '#f1d300';
         this.c2 = '#ffea2e';
+        this.vel = global.vel;
     }
 
     reset(_) {

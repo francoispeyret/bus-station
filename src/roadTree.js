@@ -1,7 +1,7 @@
 
 
 export class RoadTree {
-    constructor(_,z) {
+    constructor(_,z,global) {
         this.z = z;
         this.animationLife = 0;
         this.p = {
@@ -9,13 +9,15 @@ export class RoadTree {
             y: 0,
             z: -150 * this.z
         };
+        this.w = _.floor(_.random(18,60));
         this.side = _.random(0,10);
         if(this.side > 5) {
             this.p.x += 1000;
         } else {
             this.p.x -= 1000;
         }
-        this.vel = 10;
+        this.vel = global.vel;
+        this.velA = global.velA;
     }
 
     update(_) {
@@ -28,7 +30,7 @@ export class RoadTree {
     }
 
     setAcceleration() {
-        this.vel += 0.00015;
+        this.vel += this.velA;
     }
 
     show(_) {
@@ -38,13 +40,13 @@ export class RoadTree {
             _.push();
                 _.translate(0,-20,0);
                 _.fill('#768E2B');
-                _.cylinder(20, 1, 12);
+                _.cylinder(this.w, 1, 12);
             _.pop();
             _.fill('#5B3D2E');
-            _.cylinder(5, 40, 12);
-            _.translate(0,60,0);
+            _.cylinder(this.w/5, 40, 12);
+            _.translate(0,this.w * 2.5 / 1.5,0);
             _.fill('#2E5B37');
-            _.cone(20, 90);
+            _.cone(this.w, this.w * 2.5);
         _.pop();
     }
 }
