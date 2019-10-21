@@ -86,6 +86,22 @@ export class Bus {
             _.fill(_.color(this.color));
             _.box(this.w, this.l, 130);
 
+            // mirrors
+            _.push();
+                _.translate(-this.w/2-7,-this.l/2,7);
+                _.fill('#a6abbb');
+                _.rotateX(90);
+                _.plane(15);
+                _.translate(0,15,0);
+                _.fill('#d7d7e0');
+                _.plane(15);
+                _.translate(this.w+15,0,0);
+                _.plane(15);
+                _.fill('#a6abbb');
+                _.translate(0,-15,0);
+                _.plane(15);
+            _.pop();
+
             // wheels
             _.push();
                 _.translate(-this.w/2,-this.l/3,-70);

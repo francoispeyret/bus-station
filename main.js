@@ -1,13 +1,11 @@
 import * as p5 from './lib/p5.js';
 import {Bus} from './src/bus.js';
 import {Road} from './src/road.js';
-import {Object} from './src/object.js';
-import {Jump} from './src/jump.js';
+import {Spawner} from './src/spawner.js';
 
 let bus;
 let road;
-let object;
-let jump;
+let spawner;
 let font;
 
 let sound;
@@ -35,10 +33,9 @@ let s = (sk) => {
     sk.setup = () => {
         sk.createCanvas(window.innerWidth, window.innerHeight, sk.WEBGL);
 
-        bus = new Bus(sk);
-        road = new Road(sk,global);
-        object = new Object(sk,global);
-        jump = new Jump(sk,global);
+        bus     = new Bus(sk);
+        road    = new Road(sk,global);
+        spawner = new Spawner(sk,global);
     };
 
     sk.draw = () => {
@@ -55,19 +52,18 @@ let s = (sk) => {
 
         if(bus.crash === false) {
             road.update(sk);
-            object.update(sk,bus);
-            jump.update(sk,bus);
+            spawner.updateObjects(sk,bus);
         }
         bus.update(sk);
 
         road.show(sk);
-        object.show(sk);
-        jump.show(sk);
+        spawner.showObjects(sk);
         bus.show(sk);
     };
 
     sk.keyReleased = () => {
-        bus.keyReleased(sk.keyCode);
+        if(typeof bus !== 'undefined')
+            bus.keyReleased(sk.keyCode);
     }
 
 };
