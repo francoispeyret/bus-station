@@ -1,3 +1,6 @@
+import p5 from 'p5';
+import "p5/lib/addons/p5.sound";
+
 export class Bus {
 
     constructor() {
@@ -25,6 +28,9 @@ export class Bus {
         this.crashType = null;
         this.crashingAnimation = 0;
         this.crashingAngle = 0;
+        this.sound = new p5.Oscillator();
+        this.sound.setType('sine');
+        this.sound.amp(1,2);
     }
 
     show(_) {
@@ -68,19 +74,8 @@ export class Bus {
                 _.fill(0);
                 _.text(this.getDistance(_), 0, 0);
 
-                _.translate(-this.w / 3 - 13, -40, 0);
-                _.stroke(50);
-                _.strokeWeight(2);
-                _.plane(this.w+2,22);
-                _.noStroke();
-                _.fill(_.color(this.color));
-                _.translate(0, 0, 1.25);
-                _.plane(this.w,20);
-                _.fill(30);
-                const oilPercent = _.map(this.oil.value, 0, 100, 0, this.w)
-                _.translate(0, 0, 1.25);
-                _.plane(oilPercent,23);
-                //_.text(this.getOil(_), 0, 0);
+                _.translate(0, -30, 0);
+                _.text(this.getOil(_), 0, 0);
             _.pop();
 
             _.fill(_.color(this.color));
@@ -243,6 +238,7 @@ export class Bus {
             this.setCrash('jumpingOverkill');
         } else if(this.jumping === false){
             this.jumping = true;
+            this.sound.start();
         }
     }
 
@@ -250,9 +246,11 @@ export class Bus {
         this.p.z = _.sin(this.jumpingAnimation)*150 + 120;
         this.jumpingAngle = _.sin(this.jumpingAnimation)*-15;
         this.jumpingAnimation += 5;
+        this.sound.freq(this.jumpingAnimation*4);
         if(this.jumpingAnimation > 180) {
             this.jumpingAnimation = 0;
             this.jumping = false;
+            this.sound.stop();
         }
     }
 

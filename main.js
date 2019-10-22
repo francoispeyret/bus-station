@@ -1,4 +1,5 @@
-import * as p5 from './lib/p5.js';
+import p5 from 'p5';
+import "p5/lib/addons/p5.sound";
 import {Bus} from './src/bus.js';
 import {Road} from './src/road.js';
 import {Spawner} from './src/spawner.js';
@@ -9,6 +10,8 @@ let spawner;
 let font;
 
 let sound;
+let sound2;
+let i = 0;
 
 let global = {
     vel: 18,
@@ -19,7 +22,7 @@ let global = {
             max: 25,
         }
     }
-}
+};
 
 let s = (sk) => {
     sk.preload = () => {
@@ -36,9 +39,26 @@ let s = (sk) => {
         bus     = new Bus(sk);
         road    = new Road(sk,global);
         spawner = new Spawner(sk,global);
+
+        sound = new p5.Oscillator();
+        sound.setType('triangle');
+        sound.amp(.4);
+        sound.start();
+        sound2 = new p5.Oscillator();
+        sound2.setType('sine');
+        sound2.amp(1);
+        sound2.start();
+
+
     };
 
     sk.draw = () => {
+        sound.freq(125+i);
+        sound2.freq(75+i*3);
+        i++;
+        if(i>10) {
+            i = 0;
+        }
         sk.textFont(font);
         sk.noStroke();
         sk.background('#71C3FF');
