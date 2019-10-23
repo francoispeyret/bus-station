@@ -16,7 +16,7 @@ export class Jump extends Object {
     }
 
     reset(_) {
-        this.p.z = -3500;
+        this.p.z = -_.height*2.5;
         const randPosX = _.floor(_.random(0,3));
         if(randPosX === 0) {
             this.p.x = -300;

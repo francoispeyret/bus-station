@@ -83,6 +83,7 @@ buttonLeft.ontouchstart = function(e) {
     e.preventDefault();
     e.stopPropagation();
     if(typeof bus == 'object') {
+        clearInterval(controlLoop);
         controlLoop = setInterval(function () {
             bus.turnLeft();
         }, controlLoopSpeed);
@@ -99,6 +100,7 @@ buttonRight.ontouchstart = function(e) {
     e.preventDefault();
     e.stopPropagation();
     if(typeof bus == 'object') {
+        clearInterval(controlLoop);
         controlLoop = setInterval(function () {
             bus.turnRight();
         }, controlLoopSpeed);

@@ -2,7 +2,7 @@
     "name":"BusStation",
     "short_name":"BusStation",
     "icons":[
-        {"src":"https:\/\/francoispeyret.github.io\/bus-station\/busstation-icon.png","sizes":"256x256","type":"image\/png"}
+        {"src":"https:\/\/francoispeyret.github.io\/bus-station\/busstation-icon.png","sizes":"192x192","type":"image\/png"}
     ],
     "background_color":"#333333",
     "theme_color":"#333333",

@@ -15,7 +15,7 @@ export class Object {
     }
 
     reset(_) {
-        this.p.z = -3500;
+        this.p.z = _.height*2.5;
         this.vel = _.floor(_.random(this.obj.vel.min, this.obj.vel.max));
         const randPosX = _.floor(_.random(0,3));
         if(randPosX === 0) {
