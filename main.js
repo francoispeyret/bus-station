@@ -1,4 +1,4 @@
-import p5 from 'p5';
+import p5 from 'p5/lib/p5';
 import "p5/lib/addons/p5.sound";
 import {Bus} from './src/bus.js';
 import {Road} from './src/road.js';
@@ -11,6 +11,7 @@ let font;
 
 let sound;
 let sound2;
+let sound3;
 let i = 0;
 
 let global = {
@@ -42,19 +43,24 @@ let s = (sk) => {
 
         sound = new p5.Oscillator();
         sound.setType('triangle');
-        sound.amp(.4);
+        sound.amp(.2);
         sound.start();
         sound2 = new p5.Oscillator();
-        sound2.setType('sine');
-        sound2.amp(1);
+        sound2.setType('triangle');
+        sound2.amp(.3);
         sound2.start();
+        sound3 = new p5.Oscillator();
+        sound3.setType('triangle');
+        sound3.amp(.3);
+        sound3.start();
 
 
     };
 
     sk.draw = () => {
-        sound.freq(125+i);
-        sound2.freq(75+i*3);
+        sound.freq(73.4+i);
+        sound2.freq(43.6+i*3);
+        sound3.freq(27.5+i*2);
         i++;
         if(i>10) {
             i = 0;

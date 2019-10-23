@@ -1,4 +1,4 @@
-import p5 from 'p5';
+import p5 from 'p5/lib/p5';
 import "p5/lib/addons/p5.sound";
 
 export class Bus {
@@ -29,8 +29,8 @@ export class Bus {
         this.crashingAnimation = 0;
         this.crashingAngle = 0;
         this.sound = new p5.Oscillator();
-        this.sound.setType('sine');
-        this.sound.amp(1,2);
+        this.sound.setType('triangle');
+        this.sound.amp(.15);
     }
 
     show(_) {
@@ -238,7 +238,7 @@ export class Bus {
             this.setCrash('jumpingOverkill');
         } else if(this.jumping === false){
             this.jumping = true;
-            this.sound.start();
+            //this.sound.start();
         }
     }
 
@@ -246,7 +246,11 @@ export class Bus {
         this.p.z = _.sin(this.jumpingAnimation)*150 + 120;
         this.jumpingAngle = _.sin(this.jumpingAnimation)*-15;
         this.jumpingAnimation += 5;
-        this.sound.freq(this.jumpingAnimation*4);
+        if(this.jumpingAnimation < 110){
+            this.sound.freq(this.jumpingAnimation*3.14+622);
+        } else {
+            this.sound.stop();
+        }
         if(this.jumpingAnimation > 180) {
             this.jumpingAnimation = 0;
             this.jumping = false;
