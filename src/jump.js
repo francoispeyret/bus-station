@@ -12,6 +12,7 @@ export class Jump extends Object {
         this.c = '#f1d300';
         this.c2 = '#ffea2e';
         this.vel = global.vel;
+        this.velA = global.velA;
     }
 
     reset(_) {
@@ -27,7 +28,7 @@ export class Jump extends Object {
     }
 
     colision(_,bus) {
-        if(this.p.z > -this.w/2 && this.p.z < 450) {
+        if(this.p.z > -this.w/4 && this.p.z < 450) {
             if(
                 bus.p.x + bus.w / 2 > this.p.x - this.w / 2 &&
                 bus.p.x - bus.w / 2 < this.p.x + this.w / 2
@@ -35,7 +36,7 @@ export class Jump extends Object {
                 this.animationColisionState = true;
             }
         }
-        if(this.animationColisionState == true) {
+        if(this.animationColisionState === true) {
             bus.setJump();
         }
         this.animationColisionState = false;
@@ -47,6 +48,7 @@ export class Jump extends Object {
         }
         this.colision(_,bus);
         this.p.z += this.vel;
+        this.vel += this.velA;
     }
 
     show(_) {

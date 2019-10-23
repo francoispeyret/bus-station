@@ -40,31 +40,9 @@ let s = (sk) => {
         bus     = new Bus(sk);
         road    = new Road(sk,global);
         spawner = new Spawner(sk,global);
-
-        sound = new p5.Oscillator();
-        sound.setType('triangle');
-        sound.amp(.2);
-        sound.start();
-        sound2 = new p5.Oscillator();
-        sound2.setType('triangle');
-        sound2.amp(.3);
-        sound2.start();
-        sound3 = new p5.Oscillator();
-        sound3.setType('triangle');
-        sound3.amp(.3);
-        sound3.start();
-
-
     };
 
     sk.draw = () => {
-        sound.freq(73.4+i);
-        sound2.freq(43.6+i*3);
-        sound3.freq(27.5+i*2);
-        i++;
-        if(i>10) {
-            i = 0;
-        }
         sk.textFont(font);
         sk.noStroke();
         sk.background('#71C3FF');
@@ -76,7 +54,7 @@ let s = (sk) => {
         sk.fill('#B0E14E');
         sk.plane(sk.width * 5, sk.height * 5);
 
-        if(bus.crash === false) {
+        if(bus.crash.state === false) {
             road.update(sk);
             spawner.updateObjects(sk,bus);
         }

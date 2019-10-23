@@ -15,22 +15,42 @@ export class Bus {
         this.color = '#E1E1E1';
         this.distance = 0;
         this.vel = 0.5;
-        this.jumping = false;
-        this.jumpingAnimation = 0;
-        this.jumpingAngle = 0;
         this.oil = {
             value: 99,
             max: 100
         };
         this.usageOil = 0.005;
-    //    this.usageOil = 1;
-        this.crash = false;
-        this.crashType = null;
-        this.crashingAnimation = 0;
-        this.crashingAngle = 0;
-        this.sound = new p5.Oscillator();
-        this.sound.setType('triangle');
-        this.sound.amp(.15);
+        this.crash = {
+            state: false,
+            type: null,
+            animation: 0,
+            angle: 0
+        };
+        this.jump = {
+            jumping: false,
+            animation: 0,
+            angle: 0,
+            sound: new p5.Oscillator(),
+        };
+        this.jump.sound.setType('triangle');
+        this.jump.sound.amp(.075);
+
+        this.motor = {
+            i:0,
+            sound1: new p5.Oscillator(),
+            sound2: new p5.Oscillator(),
+            sound3: new p5.Oscillator(),
+        };
+        this.motor.sound1.setType('triangle');
+        this.motor.sound2.setType('triangle');
+        this.motor.sound3.setType('triangle');
+        this.motor.sound1.amp(.2);
+        this.motor.sound2.amp(.3);
+        this.motor.sound3.amp(.3);
+        this.motor.sound1.start();
+        this.motor.sound2.start();
+        this.motor.sound3.start();
+
     }
 
     show(_) {
@@ -41,8 +61,8 @@ export class Bus {
             _.rotateZ(this.offsetAngle);
 
             _.push();
-                if(this.crash === true) {
-                    _.rotateZ(this.crashingAngle/2);
+                if(this.crash.state === true) {
+                    _.rotateZ(this.crash.angle/2);
                 }
                 _.translate(0,0,3);
                 _.blendMode(_.MULTIPLY);
@@ -52,11 +72,11 @@ export class Bus {
             _.pop();
             _.translate(0,0,this.p.z);
 
-            if(this.crash === true) {
-                _.rotateY(this.crashingAngle);
-                _.rotateX(this.crashingAngle/2);
+            if(this.crash.state === true) {
+                _.rotateY(this.crash.angle);
+                _.rotateX(this.crash.angle/2);
             } else {
-                _.rotateX(this.jumpingAngle);
+                _.rotateX(this.jump.angle);
 
                 // animation wiggle
                 _.rotateY(_.sin(_.frameCount*20)/2);
@@ -70,7 +90,7 @@ export class Bus {
                 _.blendMode(_.BLEND);
                 _.textSize(32);
                 _.textAlign(_.RIGHT);
-                _.translate(this.w / 2 - 13,40,5);
+                _.translate(this.w / 2 - 13,40,10);
                 _.fill(0);
                 _.text(this.getDistance(_), 0, 0);
 
@@ -100,48 +120,16 @@ export class Bus {
             // wheels
             _.push();
                 _.translate(-this.w/2,-this.l/3,-70);
-                if(this.jumpingAnimation > 10 && this.jumpingAnimation < 180)
-                    _.translate(0,0,-18)
+                if(this.jump.animation > 10 && this.jump.animation < 180)
+                    _.translate(0,0,-18);
                 _.rotateZ(90);
-                _.push();
-                    if(this.crash === false) {
-                        _.rotateY(_.frameCount*-3);
-                    }
-                    _.fill(40);
-                    _.cylinder(40, 15, 12);
-                    _.fill(150);
-                    _.cylinder(25, 16, 8);
-                _.pop();
+                this.showWheel(_);
                 _.translate(0,-this.w,0);
-                _.push();
-                    if(this.crash === false) {
-                        _.rotateY(_.frameCount*-3);
-                    }
-                    _.fill(40);
-                    _.cylinder(40, 15, 12);
-                    _.fill(150);
-                    _.cylinder(25, 16, 8);
-                _.pop();
+                this.showWheel(_);
                 _.translate(this.l/1.5,0,0);
-                _.push();
-                    if(this.crash === false) {
-                        _.rotateY(_.frameCount*-3);
-                    }
-                    _.fill(40);
-                    _.cylinder(40, 15, 12);
-                    _.fill(150);
-                    _.cylinder(25, 16, 8);
-                _.pop();
+                this.showWheel(_);
                 _.translate(0,this.w,0);
-                _.push();
-                    if(this.crash === false) {
-                        _.rotateY(_.frameCount*-3);
-                    }
-                    _.fill(40);
-                    _.cylinder(40, 15, 12);
-                    _.fill(150);
-                    _.cylinder(25, 16, 8);
-                _.pop();
+                this.showWheel(_);
             _.pop();
 
             // decoration des cotés
@@ -185,8 +173,21 @@ export class Bus {
         _.pop();
     }
 
+    showWheel(_) {
+        _.push();
+            if(this.crash.state === false) {
+                _.rotateY(_.frameCount*-3);
+            }
+            _.fill(40);
+            _.cylinder(40, 15, 12);
+            _.fill(150);
+            _.cylinder(25, 16, 8);
+        _.pop();
+    }
+
     update(_) {
-        if(this.crash === true) {
+
+        if(this.crash.state === true) {
             this.crashAnimation(_);
             return;
         }
@@ -210,8 +211,15 @@ export class Bus {
         ) {
             this.p.x += this.offsetAngle;
         }
-        if(this.jumping === true) {
+        if(this.jump.jumping === true) {
             this.jumpAnimation(_);
+        }
+        this.motor.sound1.freq(73.4 + this.motor.i   + _.abs(this.offsetAngle*3));
+        this.motor.sound2.freq(43.6 + this.motor.i*3 + _.abs(this.offsetAngle*2));
+        this.motor.sound3.freq(27.5 + this.motor.i*2 + _.abs(this.offsetAngle));
+        this.motor.i++;
+        if(this.motor.i>10) {
+            this.motor.i = 0;
         }
     }
 
@@ -234,46 +242,46 @@ export class Bus {
     }
 
     setJump(user) {
-        if(this.jumping === true && user === true)  {
+        if(this.jump.jumping === true && user === true)  {
             this.setCrash('jumpingOverkill');
-        } else if(this.jumping === false){
-            this.jumping = true;
-            //this.sound.start();
+        } else if(this.jump.jumping === false){
+            this.jump.jumping = true;
+            this.jump.sound.start();
         }
     }
 
     jumpAnimation(_) {
-        this.p.z = _.sin(this.jumpingAnimation)*150 + 120;
-        this.jumpingAngle = _.sin(this.jumpingAnimation)*-15;
-        this.jumpingAnimation += 5;
-        if(this.jumpingAnimation < 110){
-            this.sound.freq(this.jumpingAnimation*3.14+622);
+        this.p.z = _.sin(this.jump.animation) * 150 + 120;
+        this.jump.angle = _.sin(this.jump.animation) * -15;
+        this.jump.animation += 5;
+        if(this.jump.animation < 110){
+            this.jump.sound.freq(this.jump.animation*3.14+622);
         } else {
-            this.sound.stop();
+            this.jump.sound.stop();
         }
-        if(this.jumpingAnimation > 180) {
-            this.jumpingAnimation = 0;
-            this.jumping = false;
-            this.sound.stop();
+        if(this.jump.animation > 180) {
+            this.jump.animation = 0;
+            this.jump.jumping = false;
+            this.jump.sound.stop();
         }
     }
 
-    setCrash(crashType) {
-        this.crashType = crashType;
-        this.crash = true;
+    setCrash(type) {
+        this.crash.type  = type ;
+        this.crash.state = true;
     }
 
     crashAnimation(_) {
-        if(this.crashingAnimation < 180) {
-            this.p.y = _.sin(this.crashingAnimation+90)*90 + 200;
+        if(this.crash.animation < 180) {
+            this.p.y = _.sin(this.crash.animation+90)*90 + 200;
             if(this.p.z > 120) {
                 this.p.z -= 30;
             }
-            if(this.crashingAnimation < 90) {
-                this.crashingAngle = _.sin(this.crashingAnimation-180)*90;
+            if(this.crash.animation < 90) {
+                this.crash.angle = _.sin(this.crash.animation-180)*90;
             }
-            //this.jumpingAngle = _.sin(this.jumpingAnimation)*-15;
-            this.crashingAnimation += 5;
+            //this.jump.angle  = _.sin(this.jump.animation)  *-15;
+            this.crash.animation += 5;
         }
     }
 
