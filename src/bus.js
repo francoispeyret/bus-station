@@ -191,9 +191,9 @@ export class Bus {
             this.crashAnimation(_);
             return;
         }
-        if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false && this.p.x > -350) {
+        if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false) {
             this.turnLeft();
-        } else if(_.keyIsDown(_.RIGHT_ARROW) && _.keyIsDown(_.LEFT_ARROW)==false && this.p.x < 350) {
+        } else if(_.keyIsDown(_.RIGHT_ARROW) && _.keyIsDown(_.LEFT_ARROW)==false) {
             this.turnRight();
         } else if(this.offsetAngle > 0 || this.offsetAngle < 0 ) {
             if(this.offsetAngle > 0) {
@@ -230,14 +230,18 @@ export class Bus {
     }
 
     turnRight() {
-        if(this.offsetAngle < 15) {
-            this.offsetAngle += 1;
+        if(this.p.x < 350) {
+            if(this.offsetAngle < 15) {
+                this.offsetAngle += 1;
+            }
         }
     }
 
     turnLeft() {
-        if(this.offsetAngle > -15) {
-            this.offsetAngle -= 1;
+        if(this.p.x > -350) {
+            if(this.offsetAngle > -15) {
+                this.offsetAngle -= 1;
+            }
         }
     }
 

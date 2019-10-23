@@ -71,5 +71,37 @@ let s = (sk) => {
     }
 
 };
+console.log(document.querySelector('button.left'));
+
+// CONTROLS (with DOM for mobile)
+let controlLoop   = null;
+const buttonLeft  = document.querySelector('button.left');
+const buttonRight = document.querySelector('button.right');
+
+
+buttonLeft.ontouchstart = function() {
+    if(typeof bus == 'object') {
+        controlLoop = setInterval(function () {
+            bus.turnLeft();
+        }, 10);
+    }
+}
+buttonLeft.ontouchend = () => {
+    if(typeof bus == 'object') {
+        clearInterval(controlLoop);
+    }
+}
+buttonRight.ontouchstart = function() {
+    if(typeof bus == 'object') {
+        controlLoop = setInterval(function () {
+            bus.turnRight();
+        }, 10);
+    }
+}
+buttonRight.ontouchend = () => {
+    if(typeof bus == 'object') {
+        clearInterval(controlLoop);
+    }
+}
 
 const P5 = new p5(s);
