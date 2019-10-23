@@ -74,31 +74,39 @@ let s = (sk) => {
 console.log(document.querySelector('button.left'));
 
 // CONTROLS (with DOM for mobile)
-let controlLoop   = null;
-const buttonLeft  = document.querySelector('button.left');
-const buttonRight = document.querySelector('button.right');
+let controlLoop        = null;
+const controlLoopSpeed = 7;
+const buttonLeft       = document.querySelector('button.left');
+const buttonRight      = document.querySelector('button.right');
 
-
-buttonLeft.ontouchstart = function() {
+buttonLeft.ontouchstart = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     if(typeof bus == 'object') {
         controlLoop = setInterval(function () {
             bus.turnLeft();
-        }, 10);
+        }, controlLoopSpeed);
     }
 }
-buttonLeft.ontouchend = () => {
+buttonLeft.ontouchend = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if(typeof bus == 'object') {
         clearInterval(controlLoop);
     }
 }
-buttonRight.ontouchstart = function() {
+buttonRight.ontouchstart = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     if(typeof bus == 'object') {
         controlLoop = setInterval(function () {
             bus.turnRight();
-        }, 10);
+        }, controlLoopSpeed);
     }
 }
-buttonRight.ontouchend = () => {
+buttonRight.ontouchend = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if(typeof bus == 'object') {
         clearInterval(controlLoop);
     }
