@@ -6,7 +6,7 @@ canvas{
     padding: 0;
 }
 
-button {
+.control {
     position: fixed;
     z-index: 5;
     width: 33vw;
@@ -17,9 +17,9 @@ button {
     border: 0;
 }
 
-button.left {
+.control.left {
     left: 0;
 }
-button.right {
+.control.right {
     right: 0;
 }

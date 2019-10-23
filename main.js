@@ -76,8 +76,8 @@ console.log(document.querySelector('button.left'));
 // CONTROLS (with DOM for mobile)
 let controlLoop        = null;
 const controlLoopSpeed = 7;
-const buttonLeft       = document.querySelector('button.left');
-const buttonRight      = document.querySelector('button.right');
+const buttonLeft       = document.querySelector('.control.left');
+const buttonRight      = document.querySelector('.control.right');
 
 buttonLeft.ontouchstart = function(e) {
     e.preventDefault();
