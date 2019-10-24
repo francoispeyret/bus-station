@@ -19,6 +19,7 @@ export class Bus {
             value: 99,
             max: 100
         };
+
         this.usageOil = 0.005;
         this.crash = {
             state: false,
@@ -26,6 +27,7 @@ export class Bus {
             animation: 0,
             angle: 0
         };
+
         this.jump = {
             jumping: false,
             animation: 0,
@@ -35,12 +37,19 @@ export class Bus {
         this.jump.sound.setType('triangle');
         this.jump.sound.amp(.075);
 
+        this.spin = {
+            spinning: true,
+            animation: 0,
+            angle: 0
+        }
+
         this.motor = {
             i:0,
             sound1: new p5.Oscillator(),
             sound2: new p5.Oscillator(),
             sound3: new p5.Oscillator(),
         };
+
         this.motor.sound1.setType('triangle');
         this.motor.sound2.setType('triangle');
         this.motor.sound3.setType('triangle');
@@ -189,6 +198,9 @@ export class Bus {
 
         if(this.crash.state === true) {
             this.crashAnimation(_);
+            this.motor.sound1.stop();
+            this.motor.sound2.stop();
+            this.motor.sound3.stop();
             return;
         }
         if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false) {

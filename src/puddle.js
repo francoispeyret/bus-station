@@ -1,6 +1,6 @@
 
 import {Object} from './object.js';
-export class Jump extends Object {
+export class Puddle extends Object {
     constructor(_,global,z) {
         super(_,global);
         this.p = {
@@ -9,8 +9,7 @@ export class Jump extends Object {
             z: -z*1500
         };
         this.w = 270;
-        this.c = '#f1d300';
-        this.c2 = '#ffea2e';
+        this.c = '#2e2e2e';
         this.vel = global.vel;
         this.velA = global.velA;
     }
@@ -37,7 +36,7 @@ export class Jump extends Object {
             }
         }
         if(this.animationColisionState === true) {
-            bus.setJump();
+            bus.setSpinning();
         }
         this.animationColisionState = false;
     }
