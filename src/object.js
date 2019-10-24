@@ -1,11 +1,12 @@
 export class Object {
-    constructor(_,global) {
+    constructor(_,global,z) {
         this.obj = global.objects;
         this.p = {
             x: -300,
             y: 70,
             z: 100
         };
+        this.spawZ = z;
         this.c = '#f91e1e';
         this.w = 120;
         this.vel = _.floor(_.random(this.obj.vel.min, this.obj.vel.max));
@@ -15,7 +16,7 @@ export class Object {
     }
 
     reset(_) {
-        this.p.z = _.height*2.5;
+        this.p.z = -this.spawZ*_.height*5;
         this.vel = _.floor(_.random(this.obj.vel.min, this.obj.vel.max));
         const randPosX = _.floor(_.random(0,3));
         if(randPosX === 0) {
@@ -37,7 +38,7 @@ export class Object {
             if(bus.oil.current < bus.oil.max)
                 bus.oil.current += .05;
         } else {
-            this.p.z += this.vel;
+            this.p.z += bus.vel;
         }
     }
 

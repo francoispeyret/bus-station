@@ -9,12 +9,17 @@ export class Bus {
             y: 200,
             z: 120
         };
+        this.maxP = {
+            x: 550
+        }
         this.w = 150;
         this.l = 330;
         this.offsetAngle = 0;
         this.color = '#E1E1E1';
         this.distance = 0;
-        this.vel = 0.5;
+        this.vel = 0;
+        this.velMax = 20;
+        this.velA = .05;
         this.oil = {
             value: 99,
             max: 100
@@ -38,10 +43,13 @@ export class Bus {
         this.jump.sound.amp(.075);
 
         this.spin = {
-            spinning: true,
+            spinning: false,
             animation: 0,
-            angle: 0
-        }
+            angle: 0,
+            sound: new p5.Oscillator(),
+        };
+        this.spin.sound.setType('triangle');
+        this.spin.sound.amp(.125);
 
         this.motor = {
             i:0,
@@ -53,9 +61,9 @@ export class Bus {
         this.motor.sound1.setType('triangle');
         this.motor.sound2.setType('triangle');
         this.motor.sound3.setType('triangle');
-        this.motor.sound1.amp(.2);
-        this.motor.sound2.amp(.3);
-        this.motor.sound3.amp(.3);
+        this.motor.sound1.amp(.15);
+        this.motor.sound2.amp(.22);
+        this.motor.sound3.amp(.25);
         this.motor.sound1.start();
         this.motor.sound2.start();
         this.motor.sound3.start();
@@ -70,7 +78,9 @@ export class Bus {
             _.rotateZ(this.offsetAngle);
 
             _.push();
-                if(this.crash.state === true) {
+                if(this.spin.spinning === true) {
+                    _.rotateZ(this.spin.angle);
+                } else if(this.crash.state === true) {
                     _.rotateZ(this.crash.angle/2);
                 }
                 _.translate(0,0,3);
@@ -84,6 +94,8 @@ export class Bus {
             if(this.crash.state === true) {
                 _.rotateY(this.crash.angle);
                 _.rotateX(this.crash.angle/2);
+            } else if(this.spin.spinning === true) {
+                _.rotateZ(this.spin.angle);
             } else {
                 _.rotateX(this.jump.angle);
 
@@ -179,6 +191,17 @@ export class Bus {
                 _.cylinder(3, 10, 8);
             _.pop()
 
+            // decorations arrière
+            _.push();
+                _.rotateX(90);
+                _.translate(0,50,this.l/2+.5);
+                _.fill('#D31313');
+                _.plane(this.w,20);
+                _.translate(0,-45,0);
+                _.fill('#333');
+                _.plane(this.w,70);
+            _.pop()
+
         _.pop();
     }
 
@@ -203,7 +226,9 @@ export class Bus {
             this.motor.sound3.stop();
             return;
         }
-        if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false) {
+        if(this.spin.spinning === true) {
+            this.spinAnimation(_);
+        } else if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false) {
             this.turnLeft();
         } else if(_.keyIsDown(_.RIGHT_ARROW) && _.keyIsDown(_.LEFT_ARROW)==false) {
             this.turnRight();
@@ -215,11 +240,10 @@ export class Bus {
             }
         }
         this.setCarConsumption();
-        this.distance += this.vel;
         this.setAcceleration();
         if(
-            (this.p.x < 350 || this.offsetAngle < 0) &&
-            (this.p.x > -350 || this.offsetAngle > 0)
+            (this.p.x < this.maxP.x || this.offsetAngle < 0) &&
+            (this.p.x > -this.maxP.x || this.offsetAngle > 0)
         ) {
             this.p.x += this.offsetAngle;
         }
@@ -241,8 +265,17 @@ export class Bus {
         }
     }
 
+    canTurn() {
+        if(
+            this.spin.spinning === false
+        ) {
+            return true;
+        }
+        return false;
+    }
+
     turnRight() {
-        if(this.p.x < 350) {
+        if(this.p.x < this.maxP.x && this.canTurn()) {
             if(this.offsetAngle < 15) {
                 this.offsetAngle += 1;
             }
@@ -250,10 +283,30 @@ export class Bus {
     }
 
     turnLeft() {
-        if(this.p.x > -350) {
+        if(this.p.x > -this.maxP.x && this.canTurn()) {
             if(this.offsetAngle > -15) {
                 this.offsetAngle -= 1;
             }
+        }
+    }
+
+    setSpinning() {
+        this.spin.spinning = true;
+        this.spin.sound.start();
+    }
+
+    spinAnimation(_) {
+        this.spin.angle += 10;
+        this.spin.animation += 5;
+        if(this.spin.animation < 170){
+            this.spin.sound.freq(_.sin(this.spin.animation*8)*150+440);
+        } else {
+            this.spin.sound.stop();
+        }
+        if(this.spin.animation > 180) {
+            this.spin.angle = 0;
+            this.spin.animation = 0;
+            this.spin.spinning = false;
         }
     }
 
@@ -283,7 +336,7 @@ export class Bus {
     }
 
     setCrash(type) {
-        this.crash.type  = type ;
+        this.crash.type  = type;
         this.crash.state = true;
     }
 
@@ -302,7 +355,16 @@ export class Bus {
     }
 
     setAcceleration() {
-        this.vel += 0.000015;
+        if(this.vel > 3) {
+            if(this.p.x < -400)
+                this.vel -= this.velA * 2;
+            if(this.p.x > 400)
+                this.vel -= this.velA * 2;
+        }
+        if(this.vel < this.velMax) {
+            this.vel += this.velA;
+        }
+        this.distance += this.vel / 20;
     }
 
     getDistance(_) {

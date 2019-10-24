@@ -20,18 +20,14 @@ export class RoadTree {
         this.velA = global.velA;
     }
 
-    update(_) {
+    update(_,bus) {
         if(this.p.z > _.height*2.5) {
             this.p.z = -_.height*2.5;
         } else {
-            this.p.z += this.vel;
+            this.p.z += bus.vel;
         }
-        this.setAcceleration();
     }
 
-    setAcceleration() {
-        this.vel += this.velA;
-    }
 
     show(_) {
         _.push();

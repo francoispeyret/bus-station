@@ -2,11 +2,11 @@
 import {Object} from './object.js';
 export class Jump extends Object {
     constructor(_,global,z) {
-        super(_,global);
+        super(_,global,z);
         this.p = {
             x: 0,
             y: -10,
-            z: -z*1500
+            z: -z*_.height
         };
         this.w = 270;
         this.c = '#f1d300';
@@ -16,7 +16,7 @@ export class Jump extends Object {
     }
 
     reset(_) {
-        this.p.z = -_.height*2.5;
+        this.p.z = -this.spawZ*_.height*5;
         const randPosX = _.floor(_.random(0,3));
         if(randPosX === 0) {
             this.p.x = -300;
@@ -47,8 +47,7 @@ export class Jump extends Object {
             this.reset(_);
         }
         this.colision(_,bus);
-        this.p.z += this.vel;
-        this.vel += this.velA;
+        this.p.z += bus.vel;
     }
 
     show(_) {

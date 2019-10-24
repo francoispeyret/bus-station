@@ -18,12 +18,12 @@ export class Road {
         }
     }
 
-    update(_) {
+    update(_,bus) {
         for(let z = 0; z < this.tiretZLength; z++) {
-            this.tirets[z].update(_);
+            this.tirets[z].update(_,bus);
         }
         for(let z = 0; z < this.treeZLength; z++) {
-            this.trees[z].update(_);
+            this.trees[z].update(_,bus);
         }
     }
 

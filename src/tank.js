@@ -2,7 +2,7 @@
 import {Object} from './object.js';
 export class Tank extends Object {
     constructor(_,global,z) {
-        super(_,global);
+        super(_,global,z);
         this.c = '#f91e1e';
         this.vel = global.vel;
         this.obj = global.objects;
@@ -14,7 +14,7 @@ export class Tank extends Object {
     }
 
     reset(_) {
-        this.p.z = -5500;
+        this.p.z = -this.spawZ*_.height*5;
         const randPosX = _.floor(_.random(0,3));
         if(randPosX === 0) {
             this.p.x = -300;
@@ -35,7 +35,7 @@ export class Tank extends Object {
             if(bus.oil.value < bus.oil.max)
                 bus.oil.value += .5;
         } else {
-            this.p.z += this.vel;
+            this.p.z += this.bus;
         }
     }
 

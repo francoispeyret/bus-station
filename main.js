@@ -9,11 +9,6 @@ let road;
 let spawner;
 let font;
 
-let sound;
-let sound2;
-let sound3;
-let i = 0;
-
 let global = {
     vel: 18,
     velA: 0.00015,
@@ -55,7 +50,7 @@ let s = (sk) => {
         sk.plane(sk.width * 5, sk.height * 5);
 
         if(bus.crash.state === false) {
-            road.update(sk);
+            road.update(sk,bus);
             spawner.updateObjects(sk,bus);
         }
         bus.update(sk);
