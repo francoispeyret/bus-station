@@ -221,9 +221,6 @@ export class Bus {
 
         if(this.crash.state === true) {
             this.crashAnimation(_);
-            this.motor.sound1.stop();
-            this.motor.sound2.stop();
-            this.motor.sound3.stop();
             return;
         }
         if(this.spin.spinning === true) {
@@ -338,6 +335,11 @@ export class Bus {
     setCrash(type) {
         this.crash.type  = type;
         this.crash.state = true;
+        this.motor.sound1.stop();
+        this.motor.sound2.stop();
+        this.motor.sound3.stop();
+        this.jump.sound.stop();
+        this.spin.sound.stop();
     }
 
     crashAnimation(_) {
