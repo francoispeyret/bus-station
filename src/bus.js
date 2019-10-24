@@ -100,7 +100,7 @@ export class Bus {
                 _.rotateX(this.jump.angle);
 
                 // animation wiggle
-                _.rotateY(_.sin(_.frameCount*20)/2);
+                _.rotateY(_.sin(this.distance*20)/2);
             }
 
             // Interface on bus
@@ -208,7 +208,7 @@ export class Bus {
     showWheel(_) {
         _.push();
             if(this.crash.state === false) {
-                _.rotateY(_.frameCount*-3);
+                _.rotateY(this.distance*-10);
             }
             _.fill(40);
             _.cylinder(40, 15, 12);
@@ -220,45 +220,68 @@ export class Bus {
     update(_) {
 
         if(this.crash.state === true) {
+            console.log('crash');
             this.crashAnimation(_);
-            return;
-        }
-        if(this.spin.spinning === true) {
-            this.spinAnimation(_);
-        } else if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false) {
-            this.turnLeft();
-        } else if(_.keyIsDown(_.RIGHT_ARROW) && _.keyIsDown(_.LEFT_ARROW)==false) {
-            this.turnRight();
-        } else if(this.offsetAngle > 0 || this.offsetAngle < 0 ) {
-            if(this.offsetAngle > 0) {
-                this.offsetAngle -= 1;
-            } else {
-                this.offsetAngle += 1;
+        } else {
+            console.log('---');
+            if(this.spin.spinning === true) {
+                this.spinAnimation(_);
+            } else if(_.keyIsDown(_.LEFT_ARROW) && _.keyIsDown(_.RIGHT_ARROW)==false) {
+                this.turnLeft();
+            } else if(_.keyIsDown(_.RIGHT_ARROW) && _.keyIsDown(_.LEFT_ARROW)==false) {
+                this.turnRight();
+            } else if(this.offsetAngle > 0 || this.offsetAngle < 0 ) {
+                if(this.offsetAngle > 0) {
+                    this.offsetAngle -= 1;
+                } else {
+                    this.offsetAngle += 1;
+                }
             }
+            this.setCarConsumption();
+            this.setAcceleration();
+            if(
+                (this.p.x < this.maxP.x || this.offsetAngle < 0) &&
+                (this.p.x > -this.maxP.x || this.offsetAngle > 0)
+            ) {
+                this.p.x += this.offsetAngle;
+            }
+            if(this.jump.jumping === true) {
+                this.jumpAnimation(_);
+            }
+            this.motor.sound1.freq(73.4 + this.motor.i   + _.abs(this.offsetAngle*3));
+            this.motor.sound2.freq(43.6 + this.motor.i*3 + _.abs(this.offsetAngle*2));
+            this.motor.sound3.freq(27.5 + this.motor.i*2 + _.abs(this.offsetAngle));
+            this.motor.i++;
+            if(this.motor.i>10) {
+                this.motor.i = 0;
+            }
+
         }
-        this.setCarConsumption();
-        this.setAcceleration();
-        if(
-            (this.p.x < this.maxP.x || this.offsetAngle < 0) &&
-            (this.p.x > -this.maxP.x || this.offsetAngle > 0)
-        ) {
-            this.p.x += this.offsetAngle;
-        }
-        if(this.jump.jumping === true) {
-            this.jumpAnimation(_);
-        }
-        this.motor.sound1.freq(73.4 + this.motor.i   + _.abs(this.offsetAngle*3));
-        this.motor.sound2.freq(43.6 + this.motor.i*3 + _.abs(this.offsetAngle*2));
-        this.motor.sound3.freq(27.5 + this.motor.i*2 + _.abs(this.offsetAngle));
-        this.motor.i++;
-        if(this.motor.i>10) {
-            this.motor.i = 0;
+    }
+
+    reset() {
+        console.log('reset');
+        if(this.crash.animation > 175) {
+            this.crash.state = false;
+            this.crash.animation = 0;
+            this.jump.jumping = false;
+            this.jump.animation = 0;
+            this.spin.spinning = false;
+            this.spin.animation = 0;
+            this.motor.sound1.start();
+            this.motor.sound2.start();
+            this.motor.sound3.start();
         }
     }
 
     keyReleased(code) {
         if(code === 38 || code === 32) {
-            this.setJump(true);
+            if(this.crash.state === true) {
+                this.reset();
+            }
+            if(this.crash.state === false) {
+                this.setJump(true);
+            }
         }
     }
 
@@ -333,6 +356,7 @@ export class Bus {
     }
 
     setCrash(type) {
+        this.vel = 0;
         this.crash.type  = type;
         this.crash.state = true;
         this.motor.sound1.stop();

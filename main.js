@@ -49,10 +49,8 @@ let s = (sk) => {
         sk.fill('#B0E14E');
         sk.plane(sk.width * 5, sk.height * 5);
 
-        if(bus.crash.state === false) {
-            road.update(sk,bus);
-            spawner.updateObjects(sk,bus);
-        }
+        road.update(sk,bus);
+        spawner.updateObjects(sk,bus);
         bus.update(sk);
 
         road.show(sk);
