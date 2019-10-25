@@ -9,7 +9,7 @@ export class Puddle extends Object {
             z: -z*_.height
         };
         this.w = 270;
-        this.c = '#29241f';
+        this.c = '#60c8ff';
         this.seed = _.floor(_.random(0,3));
         this.vel = global.vel;
         this.velA = global.velA;
